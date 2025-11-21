@@ -10,3 +10,4 @@ foobar
 hello there
 testing that it maintains verified identity
 hello there
+git status
