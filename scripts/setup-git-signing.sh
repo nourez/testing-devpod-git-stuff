@@ -3,26 +3,13 @@ set -e
 
 echo "🔧 Configuring SSH signing for THIS repo..."
 
-# ------------------------------------------------------------
-# 1. Ensure Git uses SSH signing at repo level (cannot be overridden)
-# ------------------------------------------------------------
+# 1. Force SSH-based signing at the *repo* level
 git config --local gpg.format ssh
 git config --local gpg.ssh.program "$(which ssh-keygen)"
 git config --local commit.gpgsign true
 
-# ------------------------------------------------------------
-# 2. Auto-detect forwarded SSH key from the host (1Password, macOS, YubiKey, etc.)
-# ------------------------------------------------------------
-key=$(ssh-add -L 2>/dev/null | head -n 1 || true)
+# 2. Do NOT touch user.signingkey here.
+#    DevPod is already populating a correct global user.signingkey
+#    from your host config, and that will be used automatically.
 
-if [ -n "$key" ] && [[ "$key" == ssh-* ]]; then
-    echo "🔐 Using SSH signing key:"
-    echo "$key"
-    git config --local user.signingkey "$key"
-else
-    echo "⚠️ No SSH signing key detected via ssh-agent forwarding."
-    echo "   Signing will work once your SSH agent is forwarded."
-    echo "   (1Password users: ensure the SSH Agent is enabled and ForwardAgent is on.)"
-fi
-
-echo "✅ Repo-level SSH signing configured successfully."
+echo "✅ Repo-level SSH signing configured (using global user.signingkey)."
