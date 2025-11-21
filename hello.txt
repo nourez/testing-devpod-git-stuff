@@ -8,3 +8,5 @@ replace ssh client
 atrsrtrsatrsa
 foobar
 hello there
+testing that it maintains verified identity
+hello there
